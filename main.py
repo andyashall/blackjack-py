@@ -11,11 +11,12 @@ def main():
   yourHand.append(deck[1])
   print(f'Dealers hand: {handValue(dealerHand)}')
   print(f'Your hand: {handValue(yourHand)}')
-  option = input('Hit or Stick: ')
-  print (f'you entered {str.lower(option)}')
-
-# option = input('Hit or Stick: ')
-# print (f'you entered {str.lower(option)}')
+  action = input('Hit or Stick: ')
+  if evalHand(yourHand):
+    if str.lower(action) is 'hit':
+      hit(yourHand, 2)
+      print(yourHand)
+  
 
 def cardValue(card):
   if isinstance(card, int):
@@ -34,8 +35,17 @@ def handValue(hand):
       v += cardValue(x)
     return v
 
-def hit(step, deck, hand):
-  return step
+def evalHand(h):
+  v = 0
+  for x in h:
+    v += cardValue(x)
+  if v > 21:
+    return False
+  else:
+    return True
+
+def hit(step, hand):
+  return hand.append(deck[step])
 
 if __name__ == "__main__":
   main()
