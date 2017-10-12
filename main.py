@@ -8,21 +8,24 @@ def main():
   shuffle(deck)
   addCard(dealerHand)
   addCard(playHand)
-  addCard(dealerHand)
   game()
 
 def game():
   if evalHand(playHand):
     if evalHand(dealerHand):
-      print(f'Dealers hand: {handValue(dealerHand)}')
-      print(f'Your hand: {handValue(playHand)}')
+      print(f'Dealers hand: {printHand(dealerHand)}')
+      print(f'Your hand: {printHand(playHand)}')
       action = input('Hit or Stick: ')
-      playDealer(dealerHand)
       if str.lower(action) == 'hit':
+        playDealer(dealerHand)
         addCard(playHand)
         game()
       elif str.lower(action) == 'stick' or 'stay':
-        declareWinner(handValue(dealerHand), handValue(playHand))
+        justDealer()
+        if evalHand(dealerHand):
+          declareWinner(handValue(dealerHand), handValue(playHand))
+        else:
+          print(f'Dealer busted. Dealers hand: {handValue(dealerHand)}')
       else:
         game()
     else:
@@ -34,7 +37,14 @@ def playDealer(d):
   if handValue(d) < 17:
     addCard(dealerHand)
 
+def justDealer():
+  if handValue(dealerHand) < 17:
+    addCard(dealerHand)
+    justDealer()
+
 def declareWinner(d, p):
+  if d > 21:
+    print(f'Dealer busted. Dealers hand: {d}')
   if d == p:
     print(f"It's a tie! Dealers hand: {d}, Your hand: {p}")
   elif d > p:
@@ -55,6 +65,12 @@ def cardValue(card):
     return 10
 
 def handValue(hand):
+  v = 0
+  for x in hand:
+    v += cardValue(x)
+  return v
+
+def printHand(hand):
   if len(hand) is 1:
     return hand[0]
   else:
