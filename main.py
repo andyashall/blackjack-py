@@ -2,21 +2,49 @@ from random import shuffle
 
 deck = (list(range(1,11)) + ['Ace', 'King', 'Queen', 'Jack']) * 4
 dealerHand = []
-yourHand = []
+playHand = []
 
 def main():
   shuffle(deck)
-  dealerHand.append(deck[0])
-  dealerHand.append(deck[2])
-  yourHand.append(deck[1])
-  print(f'Dealers hand: {handValue(dealerHand)}')
-  print(f'Your hand: {handValue(yourHand)}')
-  action = input('Hit or Stick: ')
-  if evalHand(yourHand):
-    if str.lower(action) is 'hit':
-      hit(yourHand, 2)
-      print(yourHand)
-  
+  addCard(dealerHand)
+  addCard(playHand)
+  addCard(dealerHand)
+  game()
+
+def game():
+  if evalHand(playHand):
+    if evalHand(dealerHand):
+      print(f'Dealers hand: {handValue(dealerHand)}')
+      print(f'Your hand: {handValue(playHand)}')
+      action = input('Hit or Stick: ')
+      playDealer(dealerHand)
+      if str.lower(action) == 'hit':
+        addCard(playHand)
+        game()
+      elif str.lower(action) == 'stick' or 'stay':
+        declareWinner(handValue(dealerHand), handValue(playHand))
+      else:
+        game()
+    else:
+      print(f'Dealer busted. Dealers hand: {handValue(dealerHand)}')
+  else:
+    print(f'You busted. Your hand: {handValue(playHand)}')
+
+def playDealer(d):
+  if handValue(d) < 17:
+    addCard(dealerHand)
+
+def declareWinner(d, p):
+  if d == p:
+    print(f"It's a tie! Dealers hand: {d}, Your hand: {p}")
+  elif d > p:
+    print(f'Dealer wins! Dealers hand: {d}, Your hand: {p}')
+  else:
+    print(f'You win! Dealers hand: {d}, Your hand: {p}')
+
+def addCard(hand):
+  deck.pop(0)
+  return hand.append(deck[0])
 
 def cardValue(card):
   if isinstance(card, int):
