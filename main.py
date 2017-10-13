@@ -14,14 +14,14 @@ def game(d, dh, ph):
       print(f'Dealers hand: {printHand(dh)}')
       print(f'Your hand: {printHand(ph)}')
       action = input('Hit or Stick: ')
-      if str.lower(action) is 'hit':
-        playDealer(dh, d)
-        addCard(ph, d)
-        game(d, dh, ph)
-      elif str.lower(action) is 'stick' or 'stay':
-        justDealer(d, ph, dh)
-        if evalHand(dh):
-          declareWinner(handValue(dh), handValue(ph))
+      if str.lower(action) == 'hit':
+        dh1, d1 = playDealer(dh, d)
+        ph1, d2 = addCard(ph, d1)
+        game(d2, dh1, ph1)
+      elif str.lower(action) == 'stick' or 'stay':
+        d1, ph1, dh1 = justDealer(d, ph, dh)
+        if evalHand(dh1):
+          declareWinner(handValue(dh1), handValue(ph1))
         else:
           print(f'Dealer busted. Dealers hand: {handValue(dh)}')
       else:
@@ -33,12 +33,14 @@ def game(d, dh, ph):
 
 def playDealer(dh, d):
   if handValue(dh) < 17:
-    addCard(dh, d)
+    return addCard(dh, d)
 
 def justDealer(d, ph, dh):
   if handValue(dh) < 17:
-    addCard(dh, d)
-    justDealer(d, ph, dh)
+    dh1, d1 = addCard(dh, d)
+    return justDealer(d1, ph, dh1)
+  else:
+    return (d, ph, dh)
 
 def declareWinner(d, p):
   if d > 21:
@@ -86,9 +88,6 @@ def evalHand(h):
     return False
   else:
     return True
-
-def hit(step, hand):
-  return hand.append(deck[step])
 
 if __name__ == "__main__":
   main()
