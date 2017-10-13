@@ -1,46 +1,44 @@
 from random import shuffle
 
-deck = (list(range(1,11)) + ['Ace', 'King', 'Queen', 'Jack']) * 4
-dealerHand = []
-playHand = []
+deck = (list(range(2,11)) + ['Ace', 'King', 'Queen', 'Jack']) * 4
 
 def main():
   shuffle(deck)
-  addCard(dealerHand)
-  addCard(playHand)
-  game()
+  ph, d = addCard([], deck)
+  dh, d1 = addCard([], d)
+  game(d1, dh, ph)
 
-def game():
-  if evalHand(playHand):
-    if evalHand(dealerHand):
-      print(f'Dealers hand: {printHand(dealerHand)}')
-      print(f'Your hand: {printHand(playHand)}')
+def game(d, dh, ph):
+  if evalHand(ph):
+    if evalHand(dh):
+      print(f'Dealers hand: {printHand(dh)}')
+      print(f'Your hand: {printHand(ph)}')
       action = input('Hit or Stick: ')
-      if str.lower(action) == 'hit':
-        playDealer(dealerHand)
-        addCard(playHand)
-        game()
-      elif str.lower(action) == 'stick' or 'stay':
-        justDealer()
-        if evalHand(dealerHand):
-          declareWinner(handValue(dealerHand), handValue(playHand))
+      if str.lower(action) is 'hit':
+        playDealer(dh, d)
+        addCard(ph, d)
+        game(d, dh, ph)
+      elif str.lower(action) is 'stick' or 'stay':
+        justDealer(d, ph, dh)
+        if evalHand(dh):
+          declareWinner(handValue(dh), handValue(ph))
         else:
-          print(f'Dealer busted. Dealers hand: {handValue(dealerHand)}')
+          print(f'Dealer busted. Dealers hand: {handValue(dh)}')
       else:
-        game()
+        game(d, dh, ph)
     else:
-      print(f'Dealer busted. Dealers hand: {handValue(dealerHand)}')
+      print(f'Dealer busted. Dealers hand: {handValue(dh)}')
   else:
-    print(f'You busted. Your hand: {handValue(playHand)}')
+    print(f'You busted. Your hand: {handValue(ph)}')
 
-def playDealer(d):
-  if handValue(d) < 17:
-    addCard(dealerHand)
+def playDealer(dh, d):
+  if handValue(dh) < 17:
+    addCard(dh, d)
 
-def justDealer():
-  if handValue(dealerHand) < 17:
-    addCard(dealerHand)
-    justDealer()
+def justDealer(d, ph, dh):
+  if handValue(dh) < 17:
+    addCard(dh, d)
+    justDealer(d, ph, dh)
 
 def declareWinner(d, p):
   if d > 21:
@@ -52,9 +50,10 @@ def declareWinner(d, p):
   else:
     print(f'You win! Dealers hand: {d}, Your hand: {p}')
 
-def addCard(hand):
-  deck.pop(0)
-  return hand.append(deck[0])
+def addCard(h, d):
+  d.pop(0)
+  h.append(d[0])
+  return (h, d)
 
 def cardValue(card):
   if isinstance(card, int):
