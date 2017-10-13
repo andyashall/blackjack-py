@@ -34,6 +34,8 @@ def game(d, dh, ph):
 def playDealer(dh, d):
   if handValue(dh) < 17:
     return addCard(dh, d)
+  else:
+    return (dh, d)
 
 def justDealer(d, ph, dh):
   if handValue(dh) < 17:
