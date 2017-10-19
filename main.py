@@ -15,8 +15,8 @@ def game(d, dh, ph):
       print(f'Your hand: {printHand(ph)}')
       action = input('Hit or Stick: ')
       if str.lower(action) == 'hit':
-        dh1, d1 = playDealer(dh, d)
-        ph1, d2 = addCard(ph, d1)
+        ph1, d1 = addCard(ph, d)
+        dh1, d2 = playDealer(dh, d)
         game(d2, dh1, ph1)
       elif str.lower(action) == 'stick' or 'stay':
         d1, ph1, dh1 = justDealer(d, ph, dh)
